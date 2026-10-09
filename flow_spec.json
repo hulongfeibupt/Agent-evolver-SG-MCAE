@@ -1,0 +1,564 @@
+{
+  "name": "司机申诉智能体流程",
+  "nodes": [
+    {
+      "id": "start",
+      "label": "司机进入申诉智能体",
+      "type": "start",
+      "step": "Step © 开场识别"
+    },
+    {
+      "id": "check_order",
+      "label": "查处置单+查历史申诉",
+      "type": "action",
+      "step": "Step © 开场识别"
+    },
+    {
+      "id": "first_appeal_initial",
+      "label": "是否首次申诉？",
+      "type": "decision",
+      "step": "Step © 开场识别"
+    },
+    {
+      "id": "first_speech",
+      "label": "首次开场话术：告知判罚原因=绕路，引导描述",
+      "type": "action",
+      "step": "Step © 开场识别"
+    },
+    {
+      "id": "again_speech",
+      "label": "再次开场话术：告知已有申诉记录，引导围绕首次分类补充",
+      "type": "action",
+      "step": "Step © 开场识别"
+    },
+    {
+      "id": "guide_describe",
+      "label": "引导司机描述绕路原因",
+      "type": "action",
+      "step": "Step ª 申诉描述收集"
+    },
+    {
+      "id": "desc_type",
+      "label": "司机描述属于哪类？",
+      "type": "decision",
+      "step": "Step ª 申诉描述收集"
+    },
+    {
+      "id": "classify_match",
+      "label": "分类匹配",
+      "type": "action",
+      "step": "Step ª 申诉描述收集"
+    },
+    {
+      "id": "first_appeal_after_classify",
+      "label": "是否首次申诉？",
+      "type": "decision",
+      "step": "Step ª 申诉描述收集"
+    },
+    {
+      "id": "ai_classify",
+      "label": "AI判定分类，匹配10个绕路申诉分类之一(新增第10类:与申诉无关)",
+      "type": "action",
+      "step": "Step ª 申诉描述收集"
+    },
+    {
+      "id": "consistent_with_first",
+      "label": "描述与首次分类是否一致？",
+      "type": "decision",
+      "step": "Step ª 申诉描述收集"
+    },
+    {
+      "id": "guide_around_first",
+      "label": "引导围绕首次分类描述",
+      "type": "action",
+      "step": "Step ª 申诉描述收集"
+    },
+    {
+      "id": "type_mismatch_count_check",
+      "label": "类型不一致计数<3？",
+      "type": "decision",
+      "step": "Step ª 申诉描述收集"
+    },
+    {
+      "id": "exit_type_mismatch3",
+      "label": "退出：类型不一致3次",
+      "type": "terminal",
+      "step": "Step ª 申诉描述收集"
+    },
+    {
+      "id": "comfort_guide",
+      "label": "安抚引导，拉回主题",
+      "type": "action",
+      "step": "Step ª 申诉描述收集"
+    },
+    {
+      "id": "off_topic_count_check",
+      "label": "题外计数<3？",
+      "type": "decision",
+      "step": "Step ª 申诉描述收集"
+    },
+    {
+      "id": "exit_off_topic3",
+      "label": "退出：题外3次",
+      "type": "terminal",
+      "step": "Step ª 申诉描述收集"
+    },
+    {
+      "id": "show_summary",
+      "label": "展示申诉信息摘要",
+      "type": "action",
+      "step": "Step « 汇总确认"
+    },
+    {
+      "id": "driver_choice",
+      "label": "司机选择？",
+      "type": "decision",
+      "step": "Step « 汇总确认"
+    },
+    {
+      "id": "build_and_call_api",
+      "label": "组装参数，调用建单API",
+      "type": "action",
+      "step": "Step ¬ 提交工单"
+    },
+    {
+      "id": "order_result",
+      "label": "建单结果",
+      "type": "decision",
+      "step": "Step ¬ 提交工单"
+    },
+    {
+      "id": "notify_order_id",
+      "label": "告知工单号",
+      "type": "action",
+      "step": "Step ¬ 提交工单"
+    },
+    {
+      "id": "end_success",
+      "label": "流程结束",
+      "type": "terminal",
+      "step": "Step ¬ 提交工单"
+    },
+    {
+      "id": "notify_fail",
+      "label": "告知提交失败，引导稍后重试",
+      "type": "action",
+      "step": "Step ¬ 提交工单"
+    },
+    {
+      "id": "end_fail",
+      "label": "流程结束",
+      "type": "terminal",
+      "step": "Step ¬ 提交工单"
+    },
+    {
+      "id": "reconfirm_summary",
+      "label": "重新确认工单信息，引导司机确认",
+      "type": "action",
+      "step": "Step « 汇总确认"
+    },
+    {
+      "id": "disagree_confirm_check",
+      "label": "不认可计数<3？",
+      "type": "decision",
+      "step": "Step « 汇总确认"
+    },
+    {
+      "id": "guide_modify",
+      "label": "引导补充或修改",
+      "type": "action",
+      "step": "Step « 汇总确认"
+    },
+    {
+      "id": "modify_count_check",
+      "label": "修改计数<3？",
+      "type": "decision",
+      "step": "Step « 汇总确认"
+    },
+    {
+      "id": "exit_disagree3",
+      "label": "退出：不认可/修改3次",
+      "type": "terminal",
+      "step": "Step « 汇总确认"
+    },
+    {
+      "id": "suspend_count_check",
+      "label": "暂缓计数<2？",
+      "type": "decision",
+      "step": "Step « 汇总确认"
+    },
+    {
+      "id": "exit_suspend2",
+      "label": "退出：暂缓2次",
+      "type": "terminal",
+      "step": "Step « 汇总确认"
+    },
+    {
+      "id": "confirm_abandon",
+      "label": "确认放弃申诉",
+      "type": "action",
+      "step": "Step « 汇总确认"
+    },
+    {
+      "id": "abandon_confirm",
+      "label": "司机确认放弃？",
+      "type": "decision",
+      "step": "Step « 汇总确认"
+    },
+    {
+      "id": "exit_abandon",
+      "label": "退出：司机主动放弃",
+      "type": "terminal",
+      "step": "Step « 汇总确认"
+    },
+    {
+      "id": "off_topic_reset",
+      "label": "有效话术(命中前8分类)→题外计数清零",
+      "type": "action",
+      "step": "Step2 申诉描述收集"
+    }
+  ],
+  "edges": [
+    {
+      "src": "start",
+      "dst": "check_order",
+      "guard": "",
+      "counter": "",
+      "label": "进入流程"
+    },
+    {
+      "src": "check_order",
+      "dst": "first_appeal_initial",
+      "guard": "",
+      "counter": "",
+      "label": "查询完成"
+    },
+    {
+      "src": "first_appeal_initial",
+      "dst": "first_speech",
+      "guard": "是",
+      "counter": "",
+      "label": ""
+    },
+    {
+      "src": "first_appeal_initial",
+      "dst": "again_speech",
+      "guard": "否",
+      "counter": "",
+      "label": ""
+    },
+    {
+      "src": "first_speech",
+      "dst": "guide_describe",
+      "guard": "",
+      "counter": "",
+      "label": "首次话术结束"
+    },
+    {
+      "src": "again_speech",
+      "dst": "guide_describe",
+      "guard": "",
+      "counter": "",
+      "label": "再次话术结束"
+    },
+    {
+      "src": "guide_describe",
+      "dst": "desc_type",
+      "guard": "",
+      "counter": "",
+      "label": "司机描述完成"
+    },
+    {
+      "src": "desc_type",
+      "dst": "classify_match",
+      "guard": "与申诉有关且(题外计数=0或命中第9类以上都不是)",
+      "counter": "",
+      "label": ""
+    },
+    {
+      "src": "desc_type",
+      "dst": "comfort_guide",
+      "guard": "与申诉无关",
+      "counter": "题外计数+1",
+      "label": ""
+    },
+    {
+      "src": "classify_match",
+      "dst": "first_appeal_after_classify",
+      "guard": "",
+      "counter": "",
+      "label": "分类匹配完成"
+    },
+    {
+      "src": "first_appeal_after_classify",
+      "dst": "ai_classify",
+      "guard": "是",
+      "counter": "",
+      "label": ""
+    },
+    {
+      "src": "first_appeal_after_classify",
+      "dst": "consistent_with_first",
+      "guard": "否",
+      "counter": "",
+      "label": ""
+    },
+    {
+      "src": "ai_classify",
+      "dst": "show_summary",
+      "guard": "",
+      "counter": "",
+      "label": "AI分类完成"
+    },
+    {
+      "src": "consistent_with_first",
+      "dst": "show_summary",
+      "guard": "一致",
+      "counter": "",
+      "label": ""
+    },
+    {
+      "src": "consistent_with_first",
+      "dst": "guide_around_first",
+      "guard": "不一致",
+      "counter": "类型不一致计数+1",
+      "label": ""
+    },
+    {
+      "src": "guide_around_first",
+      "dst": "type_mismatch_count_check",
+      "guard": "",
+      "counter": "",
+      "label": "引导完成"
+    },
+    {
+      "src": "type_mismatch_count_check",
+      "dst": "guide_describe",
+      "guard": "是",
+      "counter": "",
+      "label": ""
+    },
+    {
+      "src": "type_mismatch_count_check",
+      "dst": "exit_type_mismatch3",
+      "guard": "否",
+      "counter": "",
+      "label": ""
+    },
+    {
+      "src": "comfort_guide",
+      "dst": "off_topic_count_check",
+      "guard": "",
+      "counter": "",
+      "label": "(R1修复:进入题外计数判断)"
+    },
+    {
+      "src": "off_topic_count_check",
+      "dst": "guide_describe",
+      "guard": "是",
+      "counter": "",
+      "label": ""
+    },
+    {
+      "src": "off_topic_count_check",
+      "dst": "exit_off_topic3",
+      "guard": "否",
+      "counter": "",
+      "label": ""
+    },
+    {
+      "src": "show_summary",
+      "dst": "driver_choice",
+      "guard": "",
+      "counter": "",
+      "label": "展示完成"
+    },
+    {
+      "src": "driver_choice",
+      "dst": "build_and_call_api",
+      "guard": "确认提交",
+      "counter": "",
+      "label": ""
+    },
+    {
+      "src": "driver_choice",
+      "dst": "reconfirm_summary",
+      "guard": "不认可",
+      "counter": "不认可计数+1",
+      "label": ""
+    },
+    {
+      "src": "driver_choice",
+      "dst": "guide_modify",
+      "guard": "要求修改",
+      "counter": "不认可计数+1",
+      "label": ""
+    },
+    {
+      "src": "driver_choice",
+      "dst": "suspend_count_check",
+      "guard": "暂缓提交",
+      "counter": "暂缓计数+1",
+      "label": ""
+    },
+    {
+      "src": "driver_choice",
+      "dst": "confirm_abandon",
+      "guard": "放弃申诉",
+      "counter": "",
+      "label": ""
+    },
+    {
+      "src": "reconfirm_summary",
+      "dst": "disagree_confirm_check",
+      "guard": "",
+      "counter": "",
+      "label": ""
+    },
+    {
+      "src": "disagree_confirm_check",
+      "dst": "show_summary",
+      "guard": "是",
+      "counter": "",
+      "label": ""
+    },
+    {
+      "src": "disagree_confirm_check",
+      "dst": "exit_disagree3",
+      "guard": "否",
+      "counter": "",
+      "label": ""
+    },
+    {
+      "src": "guide_modify",
+      "dst": "modify_count_check",
+      "guard": "",
+      "counter": "",
+      "label": "引导完成"
+    },
+    {
+      "src": "modify_count_check",
+      "dst": "guide_describe",
+      "guard": "是",
+      "counter": "",
+      "label": ""
+    },
+    {
+      "src": "modify_count_check",
+      "dst": "exit_disagree3",
+      "guard": "否",
+      "counter": "",
+      "label": ""
+    },
+    {
+      "src": "suspend_count_check",
+      "dst": "show_summary",
+      "guard": "是",
+      "counter": "",
+      "label": ""
+    },
+    {
+      "src": "suspend_count_check",
+      "dst": "exit_suspend2",
+      "guard": "否",
+      "counter": "",
+      "label": ""
+    },
+    {
+      "src": "confirm_abandon",
+      "dst": "abandon_confirm",
+      "guard": "",
+      "counter": "",
+      "label": "确认放弃"
+    },
+    {
+      "src": "abandon_confirm",
+      "dst": "exit_abandon",
+      "guard": "是",
+      "counter": "",
+      "label": ""
+    },
+    {
+      "src": "abandon_confirm",
+      "dst": "show_summary",
+      "guard": "否",
+      "counter": "",
+      "label": ""
+    },
+    {
+      "src": "build_and_call_api",
+      "dst": "order_result",
+      "guard": "",
+      "counter": "",
+      "label": "API调用完成"
+    },
+    {
+      "src": "order_result",
+      "dst": "notify_order_id",
+      "guard": "成功",
+      "counter": "",
+      "label": ""
+    },
+    {
+      "src": "order_result",
+      "dst": "notify_fail",
+      "guard": "失败",
+      "counter": "",
+      "label": ""
+    },
+    {
+      "src": "notify_order_id",
+      "dst": "end_success",
+      "guard": "",
+      "counter": "",
+      "label": "告知完成"
+    },
+    {
+      "src": "notify_fail",
+      "dst": "end_fail",
+      "guard": "",
+      "counter": "",
+      "label": "告知完成"
+    },
+    {
+      "src": "desc_type",
+      "dst": "off_topic_reset",
+      "guard": "题外计数为1或2且命中前8个申诉分类之一",
+      "counter": "off_topic:=0",
+      "label": "(R3新增)"
+    },
+    {
+      "src": "off_topic_reset",
+      "dst": "classify_match",
+      "guard": "",
+      "counter": "",
+      "label": "清零后继续Step2分类匹配"
+    }
+  ],
+  "counters": {
+    "题外计数": 3,
+    "类型不一致计数": 3,
+    "不认可计数": 3,
+    "暂缓计数": 2
+  },
+  "meta": {
+    "categories": [
+      "乘客要求换路线",
+      "多次修改目的地",
+      "交通管制/修路封路",
+      "恶劣天气绕行",
+      "堵车绕行",
+      "导航路线偏差",
+      "乘客中途新增行程",
+      "道路施工临时绕行",
+      "以上都不是",
+      "与申诉无关"
+    ],
+    "overrides": [
+      "R1:删除描述无效分支",
+      "R2:新增分类10-与申诉无关",
+      "R3:题外计数有效话术清零"
+    ],
+    "override_version": 2
+  }
+}
